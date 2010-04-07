@@ -41,9 +41,7 @@ begin
   else
     
     pop.each_mail do |m| 
-      puts "Here?"
       i = Time.now.to_f + rand(10000) 
-      puts "Or Here?"
       File.open("#{$inbox}/new/#{i}:2#{$host}", 'w') do |f|
           f.write m.pop
           i = Time.now.to_f + rand(10000) 
