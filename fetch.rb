@@ -31,15 +31,15 @@ $host = Socket.gethostname
 
 begin
   
-
-  puts 'Starting'
   pop = Net::POP3.new($server)
   pop.start($user, $pass)
 
   if pop.mails.empty?
     puts "No Mail"
   else
-    
+
+    print "Downloading #{pop.mails.length} messages: "
+
     pop.each_mail do |m| 
       i = Time.now.to_f + rand(10000) 
       File.open("#{$inbox}/new/#{i}:2#{$host}", 'w') do |f|
@@ -47,9 +47,12 @@ begin
           i = Time.now.to_f + rand(10000) 
           f.close
       end
-#      m.delete
+
     end
-    
+  
+    pop.finish
+    puts "Done"
+
   end
     
 rescue Exception => e
