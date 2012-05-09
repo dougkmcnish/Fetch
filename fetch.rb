@@ -110,7 +110,7 @@ class Pop3Session
   end
   
   def boxcar_notify(msg)
-    puts 'bonk'
+
     hdr = msg.header.split(/\n/) 
 
     msgstr = <<EOSMTP
@@ -121,7 +121,7 @@ To: #{$boxcar_addr}
 EOM
 EOSMTP
 
-    puts msgstr
+    puts msgstr if $debug
     Net::SMTP.start($smtp_relay, 25) do |smtp| 
       smtp.send_message msgstr,
       'alerts@nonesense_addr.tld',
