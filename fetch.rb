@@ -39,12 +39,6 @@ $boxcar_notify = true  #change to true to send push notification via boxcar
 $boxcar_addr = ''
 
 
-#Environment stuff 
-$inbox = File.expand_path("~/Maildir") 
-$sqlite3_cache = File.expand_path("~/.pop3cache.db") 
-$host = Socket.gethostname
-
-
 
 #------------------------
 
@@ -52,6 +46,11 @@ require 'socket'
 require 'net/pop'
 require 'sqlite3' 
 require 'net/smtp' 
+
+#Environment stuff 
+$inbox = File.expand_path("~/Maildir") 
+$sqlite3_cache = File.expand_path("~/.pop3cache.db") 
+$host = Socket.gethostname
 
 
 if ARGV.include? '-h' or ARGV.include? '--help' or ARGV.include? '-?'
