@@ -24,28 +24,45 @@ fetch.rb:
   
 EOS
 
+
+
+$server = ''
+$user = ''
+$pass = ''
+
+
+# What would you like to accomplish
+$download_mail = false #change to true to write mail to maildir
+$boxcar_notify = true  #change to true to send push notification via boxcar
+
+# If you're using this for boxcar notifications. 
+$boxcar_addr = ''
+
+
+#Environment stuff 
+$inbox = File.expand_path("~/Maildir") 
+$sqlite3_cache = File.expand_path("~/.pop3cache.db") 
+$host = Socket.gethostname
+
+
+
+#------------------------
+
 require 'socket'
 require 'net/pop'
 require 'sqlite3' 
+require 'net/smtp' 
+
 
 if ARGV.include? '-h' or ARGV.include? '--help' or ARGV.include? '-?'
   puts "#{HELPMSG}"
   exit
 end
 
+# If you want debugging output
 if ARGV.include? '-d' 
   $debug = true
 end
-
-$server = 'changeme'
-$user = 'changeme'
-$pass = 'changeme'
-$sqlite3_cache = 'poptest.db'
-$boxcar_addr = ''
-$download_mail = false #change to true to write mail to maildir
-$boxcar_notify = false #change to true to send push notification via boxcar
-$inbox = File.expand_path("~/Maildir") 
-$host = Socket.gethostname
 
 class Pop3Session
 
@@ -53,7 +70,7 @@ class Pop3Session
     
     print "Logging in: " if $debug
     @pop = Net::POP3.new(server)
-    @pop.enable_ssl(Openssl::SSL::VERIFY_NONE) if ssl = true 
+    @pop.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if ssl == true 
     @pop.start(user,pass)
     puts "DONE" if $debug
    
@@ -64,8 +81,8 @@ class Pop3Session
   end
   
   def new_mail? 
-    if pop.mails.empty? 
-      puts "No mail" if $debug 
+    if @pop.mails.empty? 
+      print "*No Mail*" if $debug 
       return nil
     end
     return true 
@@ -75,7 +92,8 @@ class Pop3Session
     print "Fetching mail: " if $debug
     if self.new_mail? 
       @pop.each_mail do |m| 
-        unless @cache.seen(m.uidl)
+        if @cache.seen?(m.uidl) == 0
+          puts 'made it here' 
           self.maildir_store(m) if $download_mail 
           self.boxcar_notify(m) if $boxcar_notify 
         end
@@ -93,12 +111,24 @@ class Pop3Session
   end
   
   def boxcar_notify(msg)
+    puts 'bonk'
     hdr = msg.header.split(/\n/) 
-    
-    msg.each_line do |line| 
-      puts hdr.grep(/^From: /)
-      puts hdr.grep(/^Subject: /) 
+
+    msgstr = <<EOSMTP
+#{hdr.grep(/^From: /)[0]}
+To: #{$boxcar_addr}
+#{hdr.grep(/^Subject: /)[0]}
+
+EOM
+EOSMTP
+
+    puts msgstr
+    Net::SMTP.start('smtp.catt.com', 25) do |smtp| 
+      smtp.send_message msgstr,
+      'alerts@nonesense_addr.tld',
+      $boxcar_addr
     end
+
   end    
     
 end
@@ -110,10 +140,10 @@ class Pop3Cache
   end
   
   def open_db
-    @c = SQLite3::Database.new($cache) 
+    @c = SQLite3::Database.new($sqlite3_cache) 
   end
   
-  def create(cache) 
+  def create 
     self.open_db
     @c.execute('create table mid_cache ( mid text, seen integer )') 
   end
@@ -142,11 +172,11 @@ end
 
 
 
-begin
+#begin
   
   p = Pop3Session.new($server,$user,$pass,true) 
   p.fetch_mail 
     
-rescue Exception => e
-  puts "Error: #{e.to_s}"
-end
+#rescue Exception => e
+ # puts "Error: #{e.to_s}"
+#end
