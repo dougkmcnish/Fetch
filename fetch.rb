@@ -11,6 +11,8 @@ fetch.rb:
   changes to fake Maildir support.
   The rest is a novice coder reinventing
   the wheel. ;)
+
+  Fleshed things out a bit 
   
   FIXME: Should probably do a 
   better job of creating our 
@@ -53,7 +55,7 @@ $inbox = File.expand_path("~/Maildir")
 $sqlite3_cache = File.expand_path("~/.pop3cache.db") 
 $host = Socket.gethostname
 
-load File.expand_path("~/.fetchrc.rb") 
+load File.expand_path("~/.fetchrc.rb") if File.exists?(File.expand_path("~/.fetchrc.rb")) 
 
 if ARGV.include? '-h' or ARGV.include? '--help' or ARGV.include? '-?'
   puts "#{HELPMSG}"
