@@ -49,10 +49,11 @@ $host = Socket.gethostname
 
 class Pop3Session
 
-  def initialize(server,user,pass)
+  def initialize(server,user,pass,ssl)
     
     print "Logging in: " if $debug
     @pop = Net::POP3.new(server)
+    @pop.enable_ssl(Openssl::SSL::VERIFY_NONE) if ssl = true 
     @pop.start(user,pass)
     puts "DONE" if $debug
    
@@ -143,11 +144,8 @@ end
 
 begin
   
-  p = Pop3Session.new($server,$user,$pass) 
-
-  
-    
-    
+  p = Pop3Session.new($server,$user,$pass,true) 
+  p.fetch_mail 
     
 rescue Exception => e
   puts "Error: #{e.to_s}"
