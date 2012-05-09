@@ -37,7 +37,7 @@ $boxcar_notify = true  #change to true to send push notification via boxcar
 
 # If you're using this for boxcar notifications. 
 $boxcar_addr = ''
-
+$smtp_relay = 'localhost'
 
 
 #------------------------
@@ -122,7 +122,7 @@ EOM
 EOSMTP
 
     puts msgstr
-    Net::SMTP.start('smtp.catt.com', 25) do |smtp| 
+    Net::SMTP.start($smtp_relay, 25) do |smtp| 
       smtp.send_message msgstr,
       'alerts@nonesense_addr.tld',
       $boxcar_addr
