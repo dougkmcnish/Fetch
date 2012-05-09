@@ -48,10 +48,12 @@ require 'sqlite3'
 require 'net/smtp' 
 
 #Environment stuff 
+
 $inbox = File.expand_path("~/Maildir") 
 $sqlite3_cache = File.expand_path("~/.pop3cache.db") 
 $host = Socket.gethostname
 
+load File.expand_path("~/.fetchrc.rb") 
 
 if ARGV.include? '-h' or ARGV.include? '--help' or ARGV.include? '-?'
   puts "#{HELPMSG}"
