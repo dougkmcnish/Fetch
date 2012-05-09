@@ -12,7 +12,17 @@ fetch.rb:
   The rest is a novice coder reinventing
   the wheel. ;)
 
-  Fleshed things out a bit 
+  This started out as a quick and dirty 
+  mail fetcher. I've since added the ability
+  to send only necessary message headers to 
+  Boxcar on IOS to get around the otherwise 
+  excellent Sparrow app's missing push notification
+  support. This works better than using fetchmail/procmail
+  because I couldn't coerce fetchmail into leaving 
+  the read status of messages alone. Oh, and 
+  fetchmail/procmail is zero fun to set up. Works for me. 
+  Hope it's helpful to other Sparrow fans. 
+
   
   FIXME: Should probably do a 
   better job of creating our 
