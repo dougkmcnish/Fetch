@@ -92,7 +92,6 @@ class Pop3Session
     if self.new_mail? 
       @pop.each_mail do |m| 
         if @cache.seen?(m.uidl) == 0
-          puts 'made it here' 
           self.maildir_store(m) if $download_mail 
           self.boxcar_notify(m) if $boxcar_notify 
         end
