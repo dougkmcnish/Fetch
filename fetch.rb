@@ -33,7 +33,8 @@ fetch.rb:
     * Optional file logging 
 
     * Handle exceptions. See item 2. 
-    * Maybe daemonize (if I get bored one day) 
+    * Maybe daemonize (if I get bored one day)
+    * Validate SSL certs. 
 
    
 EOS
