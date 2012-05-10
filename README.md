@@ -22,7 +22,7 @@ Config file will override script defaults.
 ##ToDo:##
   
 * Automatically Create Maildir if necessary
-Just run *mkdir ~/Maildir/Inbox/{new,cur,tmp}* 
+Just run *mkdir -p ~/Maildir/Inbox/{new,cur,tmp}* 
 in the interim. 
 
 * Real config file support. Lazy loading right
