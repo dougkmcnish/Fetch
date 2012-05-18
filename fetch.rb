@@ -76,7 +76,7 @@ if ARGV.include? '-h' or ARGV.include? '--help' or ARGV.include? '-?'
 end
 
 # If you want debugging output
-if ARGV.include? '-d' 
+if ARGV.include? '-d' or ARGV.include? '-v'
   $debug = true
 end
 
